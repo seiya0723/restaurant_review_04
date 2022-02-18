@@ -1,0 +1,58 @@
+{% extends "restaurant/base.html" %}
+{# テンプレートの継承を行う #}
+{% load static %}
+
+{% block extra_head %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+
+<script>
+    const datas = [
+        {% for restaurant in restaurants %}
+        { "lat":{{ restaurant.lat }},"lon":{{ restaurant.lon }},"name":"{{ restaurant.name }}" },
+        {% endfor %}
+    ]
+</script>
+<script src="{% static 'restaurant/js/script.js' %}"></script>
+
+
+{% endblock %}
+
+
+{% block main %}
+<div class="row m-0">
+    <div class="col">
+        <div id="map"></div>
+    </div>
+    <div class="col">
+
+        <a class="btn btn-outline-primary" href="{% url 'restaurant:restaurant_create' %}">飲食店を登録する</a>
+
+        {% for restaurant in restaurants %}
+        <div class="border">
+
+            <h2 class="restaurant_header">
+                <a class="restaurant_header_link" href="{% url 'restaurant:single' restaurant.id %}">{{ restaurant.name }}</a>
+            </h2>
+            <div>{{ restaurant.prefecture }}</div>
+            <div>
+                <img src="{{ restaurant.image.url }}" alt="">
+            </div>
+            <div>
+                <div>{{ restaurant.ip }}</div>
+            </div>
+            <div class="text-right">
+                <a class="btn btn-outline-success" href="{% url 'restaurant:single' restaurant.id %}">この飲食店にレビューする</a>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock %}
+
